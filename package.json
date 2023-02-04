@@ -1,0 +1,10 @@
+{
+  "name": "node-cleaner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Tsubasa Ohtsuka <t.ohtsuka@re-tech.net>",
+  "license": "MIT",
+  "volta": {
+    "node": "18.14.0"
+  }
+}
