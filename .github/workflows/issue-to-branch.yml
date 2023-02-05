@@ -1,0 +1,31 @@
+name: make branch from issue with label
+on:
+  issues:
+    types:
+      - labeled
+jobs:
+  auto-made-branch:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      # ラベル名を取得する
+      - name: Get label name
+        id: label_name
+        run: |
+          label_type=$(echo ${{ github.event.label.name}})
+          if [ $label_type == 'enhancement' ]; then
+            git switch -c feature/issue${{ github.event.issue.number }}
+            git push -u origin feature/issue${{ github.event.issue.number }}
+          elif [ $label_type == 'bug' ]; then
+            git switch -c fix/issue${{ github.event.issue.number }}
+            git push -u origin fix/issue${{ github.event.issue.number }}
+          elif [ $label_type == 'documentation' ]; then
+            git switch -c doc/issue${{ github.event.issue.number }}
+            git push -u origin doc/issue${{ github.event.issue.number }}
+          # else
+
+          fi
