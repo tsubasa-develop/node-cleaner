@@ -8,6 +8,7 @@ const config: ConstructorParameters<typeof NodeCleaner>[0] = {
   forceMode: !!argv.force,
   suMode: !!argv.su,
   checkMode: !!argv.check,
+  version: !!argv.version || !!argv.v,
 };
 
 // 実行

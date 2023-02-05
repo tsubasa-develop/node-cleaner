@@ -1,3 +1,4 @@
+import packageJson from "../package.json";
 import { Interactive, block2unitByte, exec } from "../libs/utilities/main";
 
 type NodeCleanerOptions = {
@@ -6,6 +7,7 @@ type NodeCleanerOptions = {
   forceMode: boolean;
   suMode: boolean;
   checkMode: boolean;
+  version: boolean;
 };
 
 type NodeCleanerTarget = {
@@ -28,12 +30,16 @@ export class NodeCleaner {
         forceMode: false,
         suMode: false,
         checkMode: false,
+        version: false,
       },
       ...config,
     };
   }
-  // メイン処理
+  // 実行メソッド
   public async run(): Promise<void> {
+    // バージョン表示
+    if (this.config.version) return console.log(`v${this.version}`);
+    // メイン処理
     console.log(`${this.config.root} 内を検索します。`);
     this.search();
     console.log("");
@@ -108,5 +114,8 @@ export class NodeCleaner {
   }
   get completeTotalSize(): string {
     return block2unitByte(this.completeTargets.reduce((acc, v) => acc + Number(v.size), 0));
+  }
+  get version(): string {
+    return packageJson.version;
   }
 }
