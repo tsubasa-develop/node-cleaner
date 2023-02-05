@@ -17,6 +17,7 @@ type NodeCleanerTarget = {
 export class NodeCleaner {
   private config: NodeCleanerOptions;
   private targets: NodeCleanerTarget[] = [];
+  private effectiveTargets: NodeCleanerTarget[] = [];
   private completeTargets: NodeCleanerTarget[] = [];
   constructor(config: Partial<NodeCleanerOptions>) {
     this.config = {
@@ -33,15 +34,14 @@ export class NodeCleaner {
   }
   // メイン処理
   public async run(): Promise<void> {
-    console.log("node cleaner スタート");
+    console.log(`${this.config.root} 内を検索します。`);
     this.search();
-    console.log(`${this.length}件のnode_modulesを検出しました。合計サイズは${this.totalSize}です。`);
+    console.log("");
+    console.log("○ 検索結果");
+    console.log(`● ${this.length}件のnode_modulesを検出しました。`);
+    console.log(`● 合計サイズは${this.totalSize}です。`);
     // 確認モードの場合は終了
     if (this.config.checkMode) return;
-    if (this.config.limit > -1 && this.config.limit < this.length) {
-      console.log(`サイズ容量上位${this.config.limit}件のみを対象とします。`);
-    }
-    console.log("");
     // 削除実行
     await this.scanning();
     // 結果表示
@@ -50,20 +50,25 @@ export class NodeCleaner {
   // node_modules検索
   private search(): NodeCleanerTarget[] {
     this.targets = exec.getTargetDirsWithSize(this.config.root, "node_modules", this.config.suMode);
+    this.effectiveTargets = this.targets;
     // limitが設定されている場合は上位limit件のみに絞る
     if (this.config.limit > -1) {
-      this.targets = this.targets.slice(0, this.config.limit);
+      this.effectiveTargets = this.effectiveTargets.slice(0, this.config.limit);
     }
     return this.targets;
   }
   // 反復して削除処理
   private async scanning(): Promise<void> {
-    for await (const [index, target] of Object.entries(this.targets)) {
+    if (this.config.limit > -1 && this.config.limit < this.length) {
+      console.log(`● サイズ容量上位${this.config.limit}件のみを対象とします。`);
+    }
+    console.log("");
+    for await (const [index, target] of Object.entries(this.effectiveTargets)) {
       // 強制モードの場合は確認なしで削除
       if (this.config.forceMode) {
         this.delete(target);
       } else {
-        console.log(`【${Number(index) + 1}/${this.targets.length}】${target.path} (${target.formatSize})を削除しますか？`);
+        console.log(`(${Number(index) + 1}/${this.effectiveLength}) ${target.path} (${target.formatSize})を削除しますか？`);
         if (await Interactive.confirm("> ")) {
           this.delete(target);
         } else {
@@ -82,15 +87,21 @@ export class NodeCleaner {
   }
   // 結果表示
   public showResult(): void {
-    console.log("削除結果");
-    console.log(`削除対象：${this.length}件（${this.totalSize}）`);
-    console.log(`削除済み：${this.completeLength}件（${this.completeTotalSize}）`);
+    console.log("○ 削除結果");
+    console.log(`● 削除対象：${this.length}件（${this.totalSize}）`);
+    console.log(`● 削除済み：${this.completeLength}件（${this.completeTotalSize}）`);
   }
   get length(): number {
     return this.targets.length;
   }
   get totalSize(): string {
     return block2unitByte(this.targets.reduce((acc, v) => acc + Number(v.size), 0));
+  }
+  get effectiveLength(): number {
+    return this.effectiveTargets.length;
+  }
+  get effectiveTotalSize(): string {
+    return block2unitByte(this.effectiveTargets.reduce((acc, v) => acc + Number(v.size), 0));
   }
   get completeLength(): number {
     return this.completeTargets.length;
