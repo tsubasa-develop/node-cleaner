@@ -21,6 +21,12 @@ export const Interactive: {
   // ユーザーにYes/Noで答えられる質問をする
   confirm: async (msg: string) => {
     const answer = (await Interactive.question(`${msg}(y/n): `)) as string;
+    const cleansing_answer = answer.trim().toLowerCase();
+    // y/nでなければ再帰
+    if (!["y", "n"].includes(cleansing_answer)) {
+      console.log("y/nで答えてください。");
+      return await Interactive.confirm(msg);
+    }
     return answer.trim().toLowerCase() === "y";
   },
   // 標準入力を取得する
