@@ -5,7 +5,7 @@
   "author": "Tsubasa Ohtsuka <t.ohtsuka@re-tech.net>",
   "license": "MIT",
   "bin": {
-    "node-clean": "bin/node-clean.js"
+    "node-cleaner": "bin/node-cleaner.js"
   },
   "scripts": {
     "cli": "cli",
