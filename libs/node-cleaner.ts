@@ -28,25 +28,43 @@ export class NodeCleaner {
   public async run(): Promise<void> {
     console.log("node cleaner スタート");
     this.search();
-    console.log(`${this.length}件のnode_modulesを検出しました。合計サイズは${this.totalSize}です。\n`);
+    console.log(`${this.length}件のnode_modulesを検出しました。合計サイズは${this.totalSize}です。`);
+    // 確認モードの場合は終了
+    if (this.config.checkMode) return;
+    if (this.config.limit > -1) {
+      console.log(`サイズ容量上位${this.config.limit}件のみを対象とします。`);
+    }
+    console.log("");
+    // 削除実行
     this.scanning();
   }
   // node_modules検索
   private search(): { size: number; formatSize: string; path: string }[] {
-    this.targets = exec.getTargetDirsWithSize(this.root, "node_modules");
+    this.targets = exec.getTargetDirsWithSize(this.config.root, "node_modules");
+    // limitが設定されている場合は上位limit件のみに絞る
+    if (this.config.limit > -1) {
+      this.targets = this.targets.slice(0, this.config.limit);
+    }
     return this.targets;
   }
   // 反復して削除処理
   private async scanning(): Promise<void> {
     for await (const [index, target] of Object.entries(this.targets)) {
-      console.log(`【${Number(index) + 1}/${this.targets.length}】${target.path} (${target.formatSize})を削除しますか？`);
-      if (await Interactive.confirm("> ")) {
+      // 強制モードの場合は確認なしで削除
+      if (this.config.forceMode) {
         exec.delete(target.path);
-        console.log("削除しました。");
+        console.log(`削除しました。${target.path}`);
+        continue;
       } else {
-        console.log("スキップしました。");
+        console.log(`【${Number(index) + 1}/${this.targets.length}】${target.path} (${target.formatSize})を削除しますか？`);
+        if (await Interactive.confirm("> ")) {
+          exec.delete(target.path);
+          console.log(`削除しました。${target.path}`);
+        } else {
+          console.log("スキップしました。");
+        }
+        console.log("");
       }
-      console.log("");
     }
   }
   get length(): number {
