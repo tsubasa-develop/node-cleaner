@@ -4,10 +4,17 @@ import minimist from "minimist";
 const argv = minimist(process.argv.slice(2));
 const config: ConstructorParameters<typeof NodeCleaner>[0] = {
   root: argv._?.[0] || ".",
-  limit: Number.isInteger(argv.l) ? argv.l : 5,
-  forceMode: !!argv.force,
-  suMode: !!argv.su,
-  checkMode: !!argv.check,
+  limit: (() => {
+    if (Number.isInteger(argv.l)) {
+      return argv.l;
+    } else if (Number.isInteger(argv.limit)) {
+      return argv.limit;
+    }
+    return 5;
+  })(),
+  forceMode: !!argv.f || !!argv.force,
+  suMode: !!argv.s || !!argv.su,
+  checkMode: !!argv.c || !!argv.check,
 };
 
 // 実行
