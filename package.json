@@ -1,6 +1,6 @@
 {
   "name": "node-lib-cleaner",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "main": "index.js",
   "author": "Tsubasa Ohtsuka <t.ohtsuka@re-tech.net>",
   "license": "MIT",
@@ -26,7 +26,8 @@
     "start": "node bin/node-cleaner.js",
     "build": "webpack",
     "prepare": "webpack --config webpack.config.js",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "watch": "webpack --config webpack.dev.js --watch",
+    "lib:publish": "npm run build && npm version patch && npm publish"
   },
   "volta": {
     "node": "18.14.0"
