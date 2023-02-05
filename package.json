@@ -27,7 +27,7 @@
     "build": "webpack",
     "prepare": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "publish": "npm run build && npm version patch && npm publish"
+    "lib:publish": "npm run build && npm version patch && npm publish"
   },
   "volta": {
     "node": "18.14.0"
