@@ -31,7 +31,7 @@ export class NodeCleaner {
     console.log(`${this.length}件のnode_modulesを検出しました。合計サイズは${this.totalSize}です。`);
     // 確認モードの場合は終了
     if (this.config.checkMode) return;
-    if (this.config.limit > -1) {
+    if (this.config.limit > -1 && this.config.limit < this.length) {
       console.log(`サイズ容量上位${this.config.limit}件のみを対象とします。`);
     }
     console.log("");
