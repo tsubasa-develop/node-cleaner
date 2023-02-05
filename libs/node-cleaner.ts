@@ -1,10 +1,28 @@
 import { Interactive, block2unitByte, exec } from "../libs/utilities/main";
 
+type NodeCleanerOptions = {
+  root: string;
+  limit: number;
+  forceMode: boolean;
+  suMode: boolean;
+  checkMode: boolean;
+};
+
 export class NodeCleaner {
-  private root: string;
+  private config: NodeCleanerOptions;
   private targets: { size: number; formatSize: string; path: string }[] = [];
-  constructor({ root }: { root: string }) {
-    this.root = root;
+  constructor(config: Partial<NodeCleanerOptions>) {
+    this.config = {
+      // オプション初期値
+      ...{
+        root: ".",
+        limit: 5,
+        forceMode: false,
+        suMode: false,
+        checkMode: false,
+      },
+      ...config,
+    };
   }
   // メイン処理
   public async run(): Promise<void> {
