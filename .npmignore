@@ -1,0 +1,6 @@
+node_modules/
+.vscode/
+.github/
+tsconfig.json
+webpack.config.js
+webpack.dev.js
