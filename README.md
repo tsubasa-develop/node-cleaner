@@ -6,7 +6,7 @@ https://user-images.githubusercontent.com/94446930/216807461-b6fb6175-2d41-45d0-
 
 ### インストール
 ```
-npm install -g node-cleaner
+npm install -g node-lib-cleaner
 ```
 
 ### 使い方
