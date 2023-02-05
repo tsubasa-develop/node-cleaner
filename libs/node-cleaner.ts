@@ -40,7 +40,7 @@ export class NodeCleaner {
   }
   // node_modules検索
   private search(): { size: number; formatSize: string; path: string }[] {
-    this.targets = exec.getTargetDirsWithSize(this.config.root, "node_modules");
+    this.targets = exec.getTargetDirsWithSize(this.config.root, "node_modules", this.config.suMode);
     // limitが設定されている場合は上位limit件のみに絞る
     if (this.config.limit > -1) {
       this.targets = this.targets.slice(0, this.config.limit);
@@ -52,13 +52,13 @@ export class NodeCleaner {
     for await (const [index, target] of Object.entries(this.targets)) {
       // 強制モードの場合は確認なしで削除
       if (this.config.forceMode) {
-        exec.delete(target.path);
+        exec.delete(target.path, this.config.suMode);
         console.log(`削除しました。${target.path}`);
         continue;
       } else {
         console.log(`【${Number(index) + 1}/${this.targets.length}】${target.path} (${target.formatSize})を削除しますか？`);
         if (await Interactive.confirm("> ")) {
-          exec.delete(target.path);
+          exec.delete(target.path, this.config.suMode);
           console.log(`削除しました。${target.path}`);
         } else {
           console.log("スキップしました。");

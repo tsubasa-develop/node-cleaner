@@ -41,8 +41,9 @@ export const Interactive: {
 // シェルコマンドを実行する
 export const exec = {
   // 検索ディレクトリ結果とファイルサイズを単位付きで返す
-  getTargetDirsWithSize: (root: string, matchName: string): { size: number; formatSize: string; path: string }[] => {
-    const stdout = execSync(`find ${root} -name "${matchName}" -type d -prune | xargs du -s | sort -h -r`);
+  getTargetDirsWithSize: (root: string, matchName: string, su: boolean = false): { size: number; formatSize: string; path: string }[] => {
+    const preset_sudo = su ? "sudo" : "";
+    const stdout = execSync(`${preset_sudo} find ${root} -name "${matchName}" -type d -prune | ${preset_sudo} xargs du -s | ${preset_sudo} sort -h -r`);
     // 整形して返す
     return (() => {
       const lines = stdout
@@ -57,7 +58,8 @@ export const exec = {
     })();
   },
   // ディレクトリ削除
-  delete: (path: string) => {
-    execSync(`rm -rf ${path}`);
+  delete: (path: string, su: boolean = false) => {
+    const preset_sudo = su ? "sudo" : "";
+    execSync(`${preset_sudo} rm -rf ${path}`);
   },
 };
