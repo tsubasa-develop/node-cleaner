@@ -7,6 +7,20 @@
   "bin": {
     "node-cleaner": "bin/node-cleaner.js"
   },
+  "homepage": "https://github.com/tsubasa-develop/node-cleaner",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tsubasa-develop/node-cleaner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tsubasa-develop/node-cleaner/issues"
+  },
+  "keywords": [
+    "node",
+    "node_modules",
+    "clean",
+    "cleaner"
+  ],
   "scripts": {
     "cli": "cli",
     "build": "webpack",
