@@ -15,6 +15,7 @@ const config: ConstructorParameters<typeof NodeCleaner>[0] = {
   forceMode: !!argv.f || !!argv.force,
   suMode: !!argv.s || !!argv.su,
   checkMode: !!argv.c || !!argv.check,
+  version: !!argv.version || !!argv.v,
 };
 
 // 実行
