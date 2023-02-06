@@ -18,6 +18,6 @@ node-cleaner ~/Your/Projects/Root [options]
 | 書式 | 概要 | 初期値 |
 | :--- | :--- | :---: |
 | -c, --check | node_modules検索のみを行うモードで実行します | false |
-| -l, -limit | 削除確認するnode_modulesの数値上限を設定 | 5 |
+| -l, --limit | 削除確認するnode_modulesの数値上限を設定 | 5 |
 | -f, --force | 削除確認を割愛し、強制的に削除を行います (非推奨) | false |
 | -s, --su | superuserにてファイル検索/削除を行います (非推奨) | false |
