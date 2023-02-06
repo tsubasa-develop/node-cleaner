@@ -42,7 +42,7 @@ export class DirectoryCleaner {
     // バージョン表示
     if (this.config.version) return console.log(`v${this.version}`);
     // メイン処理
-    console.log(`${this.config.root} 内を検索します。`);
+    console.log(`${this.config.root} 内の${this.target}を検索します。`);
     this.search();
     console.log("");
     console.log("○ 検索結果");
