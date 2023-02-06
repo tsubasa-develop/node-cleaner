@@ -44,7 +44,8 @@ export class NodeCleaner {
     this.search();
     console.log("");
     console.log("○ 検索結果");
-    console.log(`● ${this.length}件のnode_modulesを検出しました。`);
+    this.showList();
+    console.log(`● 全${this.length}件のnode_modulesを検出しました。`);
     console.log(`● 合計サイズは${this.totalSize}です。`);
     // 確認モードの場合は終了
     if (this.config.checkMode) return;
@@ -62,6 +63,21 @@ export class NodeCleaner {
       this.effectiveTargets = this.effectiveTargets.slice(0, this.config.limit);
     }
     return this.targets;
+  }
+  // 一覧表示
+  private showList(): void {
+    console.log("● 対象一覧");
+    // // 確認モードなら全件一覧表示
+    if (this.config.checkMode) {
+      for (const target of this.targets) {
+        console.log(`  - ${target.path} (${target.formatSize})`);
+      }
+    } else {
+      for (const target of this.effectiveTargets) {
+        console.log(`  - ${target.path} (${target.formatSize})`);
+      }
+      if (this.length > this.effectiveLength) console.log(`  ...他${this.length - this.effectiveLength}件`);
+    }
   }
   // 反復して削除処理
   private async scanning(): Promise<void> {
